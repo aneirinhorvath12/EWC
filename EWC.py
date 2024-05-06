@@ -55,8 +55,6 @@ def update_fisher(task_id, dataloader):
         fisher_dict[task_id][name] = param.grad.data.clone().pow(2)
 
 def train_ewc(model, task_id, dataloader, optimizer, epochs, language, testLoader):
-    print(language)
-    accuracy_array = []
     for epoch in range(epochs):
         model.train()
         h0, c0 =  model.init_hidden(batch_size=50)
@@ -74,23 +72,6 @@ def train_ewc(model, task_id, dataloader, optimizer, epochs, language, testLoade
                     loss += (fisher * (optpar - param).pow(2)).sum() * ewc_lambda
             loss.backward()
             optimizer.step()
-
-        batch_acc = []
-        for batch_idx, batch in enumerate(testLoader):
-
-            input = batch[0].to(device)
-            target = batch[1].to(device)
-
-            optimizer.zero_grad()
-            with torch.set_grad_enabled(False):
-                out, hidden = model(input, (h0, c0))
-                _, preds = torch.max(out, 1)
-                preds = preds.to("cpu").tolist()
-                batch_acc.append(accuracy_score(preds, target.tolist()))
-
-        accuracy = sum(batch_acc)/len(batch_acc)
-        print(accuracy)
-        accuracy_array.append(accuracy)
 
 
 fisher_dict = {}
