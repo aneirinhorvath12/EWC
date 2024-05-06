@@ -1,2 +1,2 @@
 # EWC
-PyTorch Implementation of Elastic Weight Consolidation
+PyTorch Implementation of Elastic Weight Consolidation applied to LSTM network
